@@ -4,6 +4,9 @@ module Data.Hashable
 defaultSalt : Bits64
 defaultSalt = 14695981039346656037
 
+infixl 10 `hashWithSalt`
+infixl 10 `hash`
+
 ||| Interface for type that can be hashed.
 -- Minimal implementation: 'hashWithSalt'
 public export
@@ -12,13 +15,15 @@ interface Hashable a where
     hash : a -> Bits64
     hash = hashWithSalt defaultSalt
 
+||| Combine 2 hashes.
+export
+combine : Bits64 -> Bits64 -> Bits64
+combine h1 h2 = (h1 * 16777619) `prim__xor_Bits64` h2
+
 ||| Default implementation of 'hashWithSalt' for types which are smaller than Bits64 (eg Bits32, Int).
 export
 defaultHashWithSalt : Hashable a => Bits64 -> a -> Bits64
 defaultHashWithSalt salt x = salt `combine` hash x
-  where
-    combine : Bits64 -> Bits64 -> Bits64
-    combine h1 h2 = (h1 * 16777619) `prim__xor_Bits64` h2
 
 export
 Hashable Bits8 where
