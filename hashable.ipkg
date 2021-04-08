@@ -1,0 +1,5 @@
+package hashable
+
+version = 0.1.0
+
+modules = Data.Hashable
