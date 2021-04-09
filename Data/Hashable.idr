@@ -1,6 +1,9 @@
 module Data.Hashable
 
+import Data.String
+
 ||| A default salt used in the implementation of 'hash'.
+export
 defaultSalt : Bits64
 defaultSalt = 14695981039346656037
 
@@ -50,3 +53,16 @@ Hashable Int where
     hash = cast
     hashWithSalt = defaultHashWithSalt
 
+export
+Hashable Char where
+    hash = cast . ord
+    hashWithSalt = defaultHashWithSalt
+
+export
+Hashable String where
+    hashWithSalt salt str = finalise (foldl step (salt, 0) $ fastUnpack str)
+      where
+        step : (Bits64, Bits64) -> Char -> (Bits64, Bits64)
+        step (s, l) x = (hashWithSalt s x, l + 1)
+        finalise : (Bits64, Bits64) -> Bits64
+        finalise (s, l) = hashWithSalt s l
