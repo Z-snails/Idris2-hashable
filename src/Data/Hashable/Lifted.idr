@@ -4,11 +4,6 @@ import Data.Vect
 
 import Data.Hashable
 
-||| A value used to distinguish between data constructors.
-export
-distinguisher : Bits64
-distinguisher = 0x5555555555555555
-
 infixl 10 `hashWithSalt1`
 
 ||| Interface for higher-kinded types that can be hashed, if the element they contain can be hashed.
@@ -32,7 +27,7 @@ export
 export
 Hashable1 Maybe where
     hashWithSalt1 hws s Nothing = s
-    hashWithSalt1 hws s (Just x) = s `hashWithSalt` distinguisher `hws` x
+    hashWithSalt1 hws s (Just x) = 1 `hashWithSalt` s `hws` x
 
 export
 Hashable1 List where

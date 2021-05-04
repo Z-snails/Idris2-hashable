@@ -2,5 +2,7 @@ package hashable
 
 version = 0.1.0
 
+sourcedir = "src"
+
 modules = Data.Hashable
         , Data.Hashable.Lifted
