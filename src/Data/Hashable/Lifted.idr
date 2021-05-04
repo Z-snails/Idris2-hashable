@@ -7,6 +7,7 @@ import Data.Hashable
 infixl 10 `hashWithSalt1`
 
 ||| Interface for higher-kinded types that can be hashed, if the element they contain can be hashed.
+public export
 interface Hashable1 t where
     hashWithSalt1 : (Bits64 -> a -> Bits64) -> Bits64 -> t a -> Bits64
 
