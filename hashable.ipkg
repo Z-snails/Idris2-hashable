@@ -2,7 +2,11 @@ package hashable
 
 version = 0.1.0
 
+depends = idris2, contrib
+
 sourcedir = "src"
 
 modules = Data.Hashable
         , Data.Hashable.Lifted
+        , Data.Hashable.SipHash
+        , Data.Hashable.SipHashV2
