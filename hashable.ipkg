@@ -2,7 +2,7 @@ package hashable
 
 version = 0.1.0
 
-depends = idris2, contrib
+depends = contrib
 
 sourcedir = "src"
 
