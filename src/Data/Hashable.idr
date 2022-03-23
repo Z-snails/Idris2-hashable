@@ -66,3 +66,10 @@ Hashable String where
         step (s, l) x = (hashWithSalt s x, l + 1)
         finalise : (Bits64, Bits64) -> Bits64
         finalise (s, l) = hashWithSalt s l
+
+export
+Hashable Bool where
+    hash False = 0
+    hash True = 1
+    
+    hashWithSalt = defaultHashWithSalt
