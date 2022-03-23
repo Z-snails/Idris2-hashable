@@ -54,6 +54,11 @@ Hashable Int where
     hashWithSalt = defaultHashWithSalt
 
 export
+Hashable Nat where
+    hash = cast
+    hashWithSalt = defaultHashWithSalt
+
+export
 Hashable Char where
     hash = cast . ord
     hashWithSalt = defaultHashWithSalt
