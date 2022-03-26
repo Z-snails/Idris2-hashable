@@ -23,8 +23,8 @@ export
 combine : Bits64 -> Bits64 -> Bits64
 combine h1 h2 = (h1 * 16777619) `prim__xor_Bits64` h2
 
-||| Useful for creating default implementations of 'hashWithSalt' for types which are smaller than
-||| Bits64 (eg Bits32, Int).
+||| Default implementation of 'hashWithSalt' given a salt-less hashing function for types which are
+||| smaller than Bits64 (eg Bits32, Int).
 |||
 ||| @ hash A function to hash the value without a specified salt, such as `hash` on `Hashable`.
 export
