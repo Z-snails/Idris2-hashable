@@ -57,11 +57,6 @@ Hashable Int where
     hashWithSalt = defaultHashWithSalt hash
 
 export total
-Hashable Nat where
-    hash = cast
-    hashWithSalt = defaultHashWithSalt hash
-
-export total
 Hashable Char where
     hash = cast . ord
     hashWithSalt = defaultHashWithSalt hash
