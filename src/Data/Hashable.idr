@@ -25,38 +25,43 @@ combine h1 h2 = (h1 * 16777619) `prim__xor_Bits64` h2
 
 ||| Default implementation of 'hashWithSalt' for types which are smaller than Bits64 (eg Bits32, Int).
 export
-defaultHashWithSalt : Hashable a => Bits64 -> a -> Bits64
-defaultHashWithSalt salt x = salt `combine` hash x
+defaultHashWithSalt : (a -> Bits64) -> Bits64 -> a -> Bits64
+defaultHashWithSalt hash salt x = salt `combine` hash x
 
-export
+export total
 Hashable Bits8 where
     hash = cast
-    hashWithSalt = defaultHashWithSalt
+    hashWithSalt = defaultHashWithSalt hash
 
-export
+export total
 Hashable Bits16 where
     hash = cast
-    hashWithSalt = defaultHashWithSalt
+    hashWithSalt = defaultHashWithSalt hash
 
-export
+export total
 Hashable Bits32 where
     hash = cast
-    hashWithSalt = defaultHashWithSalt
+    hashWithSalt = defaultHashWithSalt hash
 
-export
+export total
 Hashable Bits64 where
     hash = id
-    hashWithSalt = defaultHashWithSalt
+    hashWithSalt = defaultHashWithSalt hash
 
-export
+export total
 Hashable Int where
     hash = cast
-    hashWithSalt = defaultHashWithSalt
+    hashWithSalt = defaultHashWithSalt hash
 
-export
+export total
+Hashable Nat where
+    hash = cast
+    hashWithSalt = defaultHashWithSalt hash
+
+export total
 Hashable Char where
     hash = cast . ord
-    hashWithSalt = defaultHashWithSalt
+    hashWithSalt = defaultHashWithSalt hash
 
 export
 Hashable String where
