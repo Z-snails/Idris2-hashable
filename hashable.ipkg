@@ -7,6 +7,5 @@ depends = contrib
 sourcedir = "src"
 
 modules = Data.Hashable
-        , Data.Hashable.Lifted
         , Data.Hashable.SipHash
         , Data.Hashable.SipHashV2
