@@ -1,6 +1,6 @@
 module Data.Hashable
 
-import Data.String
+import Data.Vect
 
 ||| A default salt used in the implementation of 'hash'.
 export
@@ -11,10 +11,14 @@ infixl 10 `hashWithSalt`
 infixl 10 `hash`
 
 ||| Interface for type that can be hashed.
--- Minimal implementation: 'hashWithSalt'
+||| Minimal implementation: 'hashWithSalt'
 public export
 interface Hashable a where
+    ||| Hash a value with the given salt
+    total
     hashWithSalt : Bits64 -> a -> Bits64
+    ||| Hash a value with the default salt
+    total
     hash : a -> Bits64
     hash = hashWithSalt defaultSalt
 
@@ -25,38 +29,83 @@ combine h1 h2 = (h1 * 16777619) `prim__xor_Bits64` h2
 
 ||| Default implementation of 'hashWithSalt' for types which are smaller than Bits64 (eg Bits32, Int).
 export
-defaultHashWithSalt : Hashable a => Bits64 -> a -> Bits64
-defaultHashWithSalt salt x = salt `combine` hash x
+defaultHashWithSalt : (a -> Bits64) -> Bits64 -> a -> Bits64
+defaultHashWithSalt hash salt x = salt `combine` hash x
 
 export
 Hashable Bits8 where
     hash = cast
-    hashWithSalt = defaultHashWithSalt
+    hashWithSalt = defaultHashWithSalt hash
 
 export
 Hashable Bits16 where
     hash = cast
-    hashWithSalt = defaultHashWithSalt
+    hashWithSalt = defaultHashWithSalt hash
 
 export
 Hashable Bits32 where
     hash = cast
-    hashWithSalt = defaultHashWithSalt
+    hashWithSalt = defaultHashWithSalt hash
 
 export
 Hashable Bits64 where
     hash = id
-    hashWithSalt = defaultHashWithSalt
+    hashWithSalt = defaultHashWithSalt hash
 
 export
 Hashable Int where
     hash = cast
-    hashWithSalt = defaultHashWithSalt
+    hashWithSalt = defaultHashWithSalt hash
+
+export
+Hashable Int8 where
+    hash = cast
+    hashWithSalt = defaultHashWithSalt hash
+
+export
+Hashable Int16 where
+    hash = cast
+    hashWithSalt = defaultHashWithSalt hash
+
+export
+Hashable Int32 where
+    hash = cast
+    hashWithSalt = defaultHashWithSalt hash
+
+export
+Hashable Int64 where
+    hash = cast
+    hashWithSalt = defaultHashWithSalt hash
 
 export
 Hashable Char where
     hash = cast . ord
-    hashWithSalt = defaultHashWithSalt
+    hashWithSalt = defaultHashWithSalt hash
+
+export
+Hashable Integer where
+    hashWithSalt salt x = hashPositive (makeSalt salt x) (abs x)
+      where
+        makeSalt : Bits64 -> Integer -> Bits64
+        makeSalt x y = if y >= 0
+            then x
+            else negate x
+
+        bits64Max : Integer
+        bits64Max = 1 `prim__shl_Integer` 64 - 1
+
+        hashPositive : Bits64 -> Integer -> Bits64
+        hashPositive salt x = if x > bits64Max
+            then hashPositive
+                (hashWithSalt salt
+                    (cast {to=Bits64} (x `prim__and_Integer` bits64Max)))
+                (assert_smaller x $ x `prim__shr_Integer` 64)
+            else hashWithSalt salt (cast {to=Bits64} x)
+
+export
+Hashable Nat where
+    hash x = hash (cast {to=Integer} x)
+    hashWithSalt salt x = hashWithSalt salt (cast {to=Integer} x)
 
 export
 Hashable String where
@@ -72,4 +121,37 @@ Hashable Bool where
     hash False = 0
     hash True = 1
     
-    hashWithSalt = defaultHashWithSalt
+    hashWithSalt = defaultHashWithSalt hash
+
+export
+Hashable a => Hashable (Maybe a) where
+    hashWithSalt salt Nothing = hashWithSalt salt 0
+    hashWithSalt salt (Just x) = hashWithSalt salt 1 `hashWithSalt` x
+
+export
+Hashable a => Hashable (List a) where
+    hashWithSalt salt [] = hashWithSalt salt 0
+    hashWithSalt salt (x :: xs) =
+        salt
+            `hashWithSalt` 1
+            `hashWithSalt` x
+            `hashWithSalt` xs
+
+export
+Hashable a => Hashable (SnocList a) where
+    hashWithSalt salt [<] = hashWithSalt salt 0
+    hashWithSalt salt (sx :< x) =
+        salt
+            `hashWithSalt` 1
+            `hashWithSalt` x
+            `hashWithSalt` sx
+
+export
+Hashable a => Hashable (Vect len a) where
+    hashWithSalt salt [] = hashWithSalt salt 0
+    hashWithSalt salt (x :: xs) =
+        salt
+            `hashWithSalt` 1
+            `hashWithSalt` x
+            `hashWithSalt` xs
+
