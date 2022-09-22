@@ -113,9 +113,9 @@ siphash buf = do
     siphashLoop stref buf 0 size
     let left = size `and` 7
     b <- siphashLeftover stref buf size (size - left) left
-    modifyIORef stref $ record { v3 $= (`xor` b) }
+    modifyIORef stref $ { v3 $= (`xor` b) }
     repeat DROUNDS $ compress stref
-    modifyIORef stref $ record { v0 $= (`xor` b) }
+    modifyIORef stref $ { v0 $= (`xor` b) }
     MkState v0 v1 v2 v3 <- readIORef stref
     pure $ (v0 `xor` v1) `xor` (v2 `xor` v3)
 
