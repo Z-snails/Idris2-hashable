@@ -124,6 +124,10 @@ Hashable Bool where
     hashWithSalt = defaultHashWithSalt hash
 
 export
+(Hashable a, Hashable b) => Hashable (a, b) where
+    hashWithSalt salt (a, b) = salt `hashWithSalt` a `hashWithSalt` b
+
+export
 Hashable a => Hashable (Maybe a) where
     hashWithSalt salt Nothing = hashWithSalt salt 0
     hashWithSalt salt (Just x) = hashWithSalt salt 1 `hashWithSalt` x
