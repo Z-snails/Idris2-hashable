@@ -7,8 +7,8 @@ export
 defaultSalt : Bits64
 defaultSalt = 14695981039346656037
 
-infixl 10 `hashWithSalt`
-infixl 10 `hash`
+export infixl 10 `hashWithSalt`
+export infixl 10 `hash`
 
 ||| Interface for type that can be hashed.
 ||| Minimal implementation: 'hashWithSalt'
