@@ -109,7 +109,7 @@ Hashable Nat where
 
 export
 Hashable String where
-    hashWithSalt salt str = finalise (foldl step (salt, 0) $ fastUnpack str)
+    hashWithSalt salt str = finalise (foldl step (salt, 0) $ unpack str)
       where
         step : (Bits64, Bits64) -> Char -> (Bits64, Bits64)
         step (s, l) x = (hashWithSalt s x, l + 1)
