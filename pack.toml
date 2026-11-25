@@ -1,0 +1,5 @@
+[custom.all.hashable]
+type = "local"
+path = "."
+ipkg = "hashable.ipkg"
+test = "test/test.ipkg"
