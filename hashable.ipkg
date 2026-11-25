@@ -1,11 +1,9 @@
 package hashable
 
 version = 0.1.0
-
-depends = base 
-
+depends = base
+        , ref1
 sourcedir = "src"
-
 modules = Data.Hashable
         , Data.Hashable.SipHash
         , Data.Hashable.SipHashV2

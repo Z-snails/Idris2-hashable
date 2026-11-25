@@ -1,0 +1,9 @@
+package hashable-test
+
+version    = 0.1.0
+sourcedir  = "src"
+depends    = hashable
+           , hedgehog
+           , ref1
+main       = Main
+executable = "hashable-test"
